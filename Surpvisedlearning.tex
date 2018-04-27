@@ -1,0 +1,41 @@
+\documentclass[50pt]{article}
+\usepackage{ctex}
+\usepackage{CJK}
+\usepackage{picinpar,graphicx}
+\usepackage{cite}
+\usepackage{multirow}
+\usepackage{hyperref,amsmath,amssymb,amscd}
+\setlength{\parindent}{2em}
+\begin{document}
+\title{Supervised learning I}
+\author{Liangjie Cao}
+\date{27 April 2018}
+\maketitle
+\par
+This paper said that supervised learning , whether deep or not , is the most common form of machine learning .\ref{Table} This means they build a system that can classify images as containing . The professors first collect a large data set of images of homes , cars , people and pets , each labelled with its category before training . \\
+\par
+The process is complex , because they want to have the highest score of all acategories , but this is impossible . They compute an objective function that measures the error (or distance) between the output scores and the desired pattern of scores.\cite{name1} The machine then modifies the internal adjustable pattern called weight .
+ \begin{figure}[ht]
+ \centering
+ \includegraphics[width=5cm]{moxing.png}\\
+ \caption{Supervised learning}
+\end{figure}\\
+\par
+The main question is , how to properly adjust the weight vector for each weight which indicates by what amount the error would increase or decrease if the weight were increased by a tiny amount. I will continue learning . \\
+ \begin{table}[!htbp]
+  \centering
+ \begin{tabular}{|c|c|c|}
+    \hline
+    1 & Supervised Learning\\
+  \hline
+    2 & Unsupervised Learning\\
+  \hline
+   3 &  Intensive learning\\
+   \hline
+  \end{tabular}
+  \caption{Classification of machine learning}\label{Table}
+  \end{table}
+\bibliographystyle{plain}
+\bibliography{yinyong1}
+\end{document}
+
