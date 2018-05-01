@@ -1,0 +1,40 @@
+\documentclass[5pt]{article}
+\usepackage{ctex}
+\usepackage{CJK}
+\usepackage{picinpar,graphicx}
+\usepackage{cite}
+\usepackage{multirow}
+\usepackage{hyperref,amsmath,amssymb,amscd}
+\setlength{\parindent}{2em}
+\twocolumn
+\begin{document}
+\title{\textbf{Supervised learning III}}
+\author{\textbf{Liangjie Cao}}
+\date{1 May 2018}
+\maketitle
+\par
+\textbf{The paper says since the 1960s we have known that linear classifiers can only carve their input space into very simple regions, namely half-spaces separated by a hyperplane.Actually image and speech recognition require the input–output function to be insensitive to irrelevant variations of the input, such as variations in position, orientation or illumination of an object, or variations in the pitch or accent of speech. Meanwhile it is very sensitive to particular minute variations.\cite{name1} }\\
+\par
+\textbf{If we take this to the pixel level, images of two Samoyeds in different poses and in different environments may be very different from each other, though two images of a Samoyed and a wolf in the same position and on similar backgrounds may be very similar to each other. This is linear classifier, or called any other ‘shallow’ classifier operating on Figure~\ref{Figure}}
+ \begin{figure}[ht]
+ \centering
+ \includegraphics[width=5cm]{network.png}\\
+ \caption{\textbf{Multilayer neural networks and backpropagation}}\label{Figure}
+\end{figure}\\
+\par
+\textbf{The counting process can be seen in \textbf{c}. They first compute the total input z to each unit, which is a weighted sum of the outputs of the units in the layer below.  Then using a non-linear function f(.), f(z) = (exp(z) − exp(−z))/(exp(z) + exp(−z)) and logistic function logistic, f(z) = 1/(1 + exp(−z)). To be honest, I haven't understood these two function in Table~\ref{Table}, maybe this is just an output and follow the rule. I will continue learning.}\\
+ \begin{table}[!htbp]
+  \centering
+ \begin{tabular}{|p{3cm}|p{4cm}|p{3cm}}
+   \hline
+     hyberbolic tangent &  f(z) = (exp(z) − exp(−z))/(exp(z) + exp(−z))\\
+  \hline
+     logistic function logistic &  f(z) = 1/(1 + exp(−z))\\
+   \hline
+  \end{tabular}
+  \caption{\textbf{Classifition of output funtion}} \label{Table}
+  \end{table}
+\bibliographystyle{plain}
+\bibliography{yinyong1}
+\end{document}
+
