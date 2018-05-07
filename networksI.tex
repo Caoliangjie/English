@@ -1,0 +1,45 @@
+\documentclass[35pt]{article}
+\usepackage{ctex}
+\usepackage{CJK}
+\usepackage{picinpar,graphicx}
+\usepackage{cite}
+\usepackage{multirow}
+\usepackage{hyperref,amsmath,amssymb,amscd}
+\setlength{\parindent}{2em}
+\twocolumn
+\begin{document}
+\title{\textbf{Convolutional neural networks I}}
+\author{\textbf{Liangjie Cao}}
+\date{\textbf{7 May 2018}}
+\maketitle
+\par
+\textbf{Today I learn that the process of Convolution neural network. It is designed to process multi dimensional array data. For example, a color image with 3 color channels is composed of 32-d images including pixel values. Very many data forms are multi dimensional arrays in which 1d is used to represent signals and sequences, including languages, and 2d is used to represent images or sounds. 3D is used to represent video or images with sound.}\\
+\par
+\textbf{The architecture of a typical ConvNet (Fig.~\ref{Figure1}) is structured as a series of stages. The first few stages are composed of two types of layers: convolutional layers and pooling layers.(Table.~\ref{Table}) Although the role of the convolutional layer is to detect local conjunctions of features from the previous layer, the role of the pooling layer is to merge semantically similar features into one.~\cite{name1}And Deep neural networks exploit the property that many natural signals are compositional hierarchies, in which higher-level features are obtained by composing lower-level ones. In images, local combinations of edges form motifs, motifs assemble into parts, and parts form objects.}
+\\
+\par
+\textbf{The convolutional and pooling layers in ConvNets are directly inspired by the classic notions of simple cells and complex cells in visual neuroscience, and the overall architecture is reminiscent of the LGN–V1–V2–V4–IT hierarchy(Figure.~\ref{Figure2}) in the visual cortex ventral pathway.ConvNets have their roots in the neocognitron, the architecture of which was somewhat similar, but did not have an end-to-end supervised-learning algorithm such as backpropagation. I will continue learning what it really works.}\\
+\onecolumn
+ \begin{figure}[ht]
+ \centering
+ \includegraphics[width=15cm]{dog.png}\\
+ \caption{\textbf{Inside a convolutional network}}\label{Figure1}
+ \centering
+ \includegraphics[width=5cm]{brain.png}\\
+ \caption{\textbf{LGN–V1–V2–V4–IT hierarchy}}\label{Figure2}
+\end{figure}
+\begin{table}[!htbp]
+  \centering
+ \begin{tabular}{|p{2cm}|p{2cm}|p{2cm}}
+   \hline
+     1 & convolutional layers\\
+  \hline
+     2 & pooling layers\\
+   \hline
+  \end{tabular}
+  \caption{\textbf{types of layers}} \label{Table}
+  \end{table}
+\bibliographystyle{plain}
+\bibliography{yinyong1}
+\end{document}
+
