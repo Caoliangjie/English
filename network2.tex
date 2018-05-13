@@ -1,0 +1,44 @@
+\documentclass[20pt]{article}
+\usepackage{ctex}
+\usepackage{CJK}
+\usepackage{picinpar,graphicx}
+\usepackage{cite}
+\usepackage{multirow}
+\usepackage{hyperref,amsmath,amssymb,amscd}
+\setlength{\parindent}{2em}
+\twocolumn
+\begin{document}
+\title{\textbf{Recurrent neural networks}}
+\author{\textbf{Liangjie Cao}}
+\date{\textbf{13 May 2018}}
+\maketitle
+\par
+\textbf{Today I learn Recurrent neural networks in Deep learning. The paper when backpropagation was first introduced, its most exciting use was for training recurrent neural networks (RNNs in Table. ~\ref{Table1}). For tasks that involve sequential inputs, such as speech and language, it is often better to use RNNs (Fig. 1~\ref{Figure1}). RNNs are very powerful dynamic systems, but training them has proved to be problematic because the backpropagated gradients either grow or shrink at each time step, so over many time steps they typically explode or vanish.\cite{name1}}
+\par
+\textbf{RNNs, the paper also says once unfolded in time (Fig. ~\ref{Figure1}), can be seen as very deep feedforward networks in which all the layers share the same weights. Although their main purpose is to learn long-term dependencies, theoretical and empirical evidence shows that it is difficult to learn to store information for very long. To correct for that, one idea is to augment the network with an explicit memory. The first proposal of this kind is the long short-term memory (LSTM) networks that use special hidden units, the natural behaviour of which is to remember inputs for a long time. Translating language, controlling robots, image analysis, document summarization, recognition of speech recognition, handwriting recognition, control of chat robots, prediction of disease, click rate and stock and synthetic music. That's all the function of LSTM. }
+\par
+\textbf{LSTM networks have subsequently proved to be more effective than conventional RNNs, especially when they have several layers for each time step, enabling an entire speech recognition system that goes all the way from acoustics to the sequence of characters in the transcription. That's amazing. How can we do next step? Only time will tell us. }\\
+\newpage
+\onecolumn
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=15cm]{model1.png}\\
+ \caption{Model}\label{Figure1}
+\end{figure}
+ \begin{table}[!htbp]
+  \centering
+ \begin{tabular}{|p{5cm}|p{5cm}|p{5cm}}
+    \hline
+    1 & Back Propagation Through Time(BPTT)\\
+    \hline
+    2 & Real-time Recurrent Learning(RTRL) \\
+    \hline
+    3 & Extended Kalman Filter(EKF) \\
+    \hline
+  \end{tabular}
+  \caption{\textbf{Regular training algorithms}} \label{Table1}
+  \end{table}
+  \bibliographystyle{plain}
+\bibliography{yinyong1}
+\end{document}
+
