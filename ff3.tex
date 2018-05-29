@@ -1,0 +1,76 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{ctex}
+\usepackage{CJK}
+\usepackage{times}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{cvpr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{cite}
+\usepackage{multirow}
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\usepackage{geometry}
+\usepackage{latexsym}
+\setmainfont{Times New Roman}
+\usepackage{setspace}
+\setlength{\parindent}{2em}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Learning Deep Representations of Fine-Grained Visual Descriptions}}
+\author{Liangjie Cao\\29 May 2018}
+\maketitle
+\section{Collecting fine-grained visual descriptions}
+In this section the authors describe the collection of our new dataset of fine-grained visual descriptions. For each image in CUB and Flowers, they collected ten single-sentence visual descriptions. They used the Amazon Mechanical Turk (AMT) platform for data collection, using non-``Master" certified workers situated in the US with average work approval rating above 95\%. Figure~\ref{Figure1} shows several representative examples of the results from our data collection. The descriptions almost always accurately describe the image, to varying degrees of comprehensiveness. Thus, in some cases multiple captions might be needed to fully disambiguate the species of bird category. However, as the authors show subsequently, the data is descriptive and large enough to support training high-capacity text models and greatly improve the performance of textbased embeddings for zero-shot learning.
+\begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.3\textwidth]{examp.png}\\
+ \caption{\textbf{Example annotations of birds and flowers.}}\label{Figure1}
+ \end{figure}
+\section{CUB zero-shot recognition and retrieval}
+In this section the authors describe the protocol and results for our zero-shot tasks. For both recognition and retrieval, they first extract text encodings from test captions and average them per-class. In this experiment they use all test captions and in a later section they vary this number, including using a single caption per class. Table~\ref{Table1} summarizes their results. Both in the classification (first two columns) and for retrieval (last two columns) settings, the symmetric (DS-SJE) formulation of our model improves over the asymmetric (DA-SJE) formulation. Especially for retrieval, DS-SJE performs much better than DA-SJE consistently for all the text embedding variants. It makes the difference between working very well and failing, particularly for the high-capacity models which likely overfit to the classification task in the asymmetric setting. In the classi?cation setting there are notable differences between the language models. For DA-SJE (first column), Char-CNN-RNN (54.0\% Top-1 Acc) and Word-CNN-RNN (54.3\%) outperform the attributes-based state-of-the-art \cite{name2} for zero-shot classification (50.1\%). In fact they replicated the attribute-based model in~\cite{name2} and got slightly better results (50.9\%, also reported in Table 1), probably due to training on 10 image crops instead of a single crop. Similar observations hold for DS-SJE (second column). Notably for DS-SJE, Char-CNN-RNN (54.0\%), Word-CNN (51.0\%), Word-LSTM (53.0\%) and Word-CNN-RNN (56.8\%) outperform the attributes.~\cite{name54}
+ \begin{figure}[htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{class.png}\\
+ \caption{\textbf{Zero-shot image classfication and retrieval accuracy versus number of sentences per-image used in training and number of sentences in total used for testing. Results reported on CUB.}}\label{Figure2}
+\end{figure}In the case of retrieval and DS-SJE (last column), attributes still performs the best (50.0\% AP), but Word-CNN-RNN (48.7\%) approaches this result.
+\par
+\section{Effect of visual description training set size}
+ The authors show the performance of several text encoding models in Fig~\ref{Figure2}. In zero-shot classification, attributes are competitive when two captions per-image are available, but with more training captions the deep network models win. For retrieval, the crossover point might happen with more than ten captions per image as the results seem to be increasing. The baseline word2vec and BoW encodings do not gain much from more data. The results suggests that given a moderate number of sentences, i.e. four per image, neural text encoders improve the performance over the state-ofthe-art attribute-based methods significantly. Figure~\ref{Figure2}shows the averaged results for zero-shot classfication and for zero-shot retrieval. Both figures include error bars to ¡À1 standard deviation. Note that the error bars are larger towards the left side of both figures because in the few-text case, especially discriminative or especially vague (or wrong) descriptions can have a relatively larger impact on the text embedding quality. BoW again shows a surprisingly good performance, significantly better than word2vec and competitive with Char-CNN. However, the word-level neural text encoders outperform word2vec and BoW at all operating points.
+
+ \begin{table}[htbp]
+  \centering
+ \begin{tabular}{|p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{0.8cm}|}
+    \hline
+     & \multicolumn{2}{c|}{Top-1 Acc (\%)} & \multicolumn{2}{c|}{AP@50 (\%)}\\
+    \hline
+     \textbf{Embedding} & DA-SJE & DS-SJE & DA-SJE & DS-SJE\\
+    \hline
+     ATTRIBUTES & 50.9 & 50.4 & 20.4 & 50.0\\
+    \hline
+     WORD2VEC & 38.7 & 38.6 & 7.5 & 33.5 \\
+    \hline
+     BAG-OF-WORDS & 43.4 & 44.1 & 24.6 & 39.6\\
+    \hline
+     CHAR CNN & 47.2 & 48.2 & 2.9 & 42.7\\
+    \hline
+     CHAR LSTM & 22.6 & 21.6 & 11.6 & 22.3\\
+    \hline
+     CHAR CNN-RNN & 54.0 & 54.0 & 6.9 & 45.6\\
+    \hline
+     WORD CNN & 50.5 & 51.0 & 3.4 & 43.3\\
+    \hline
+     WORD LSTM & 52.2 & 53.0 & 36.8 & 46.8 \\
+    \hline
+     WORD CNN-RNN & 54.3 & 56.8 & 4.8 & 48.7\\
+    \hline
+  \end{tabular}
+  \caption{\textbf{Zero-shot recognition and retrieval on CUB}} \label{Table1}
+  \end{table}
+\newpage
+\bibliographystyle{abbrv}
+\bibliography{yinyong1}
+\end{document}
+
