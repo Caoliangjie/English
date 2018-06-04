@@ -1,0 +1,67 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Affinity CNN: Learning Pixel-Centric Pairwise Relations for Figure/Ground Embedding II}}
+\author{Liangjie Cao\\4 June 2018}
+\maketitle
+\section{Spectral Embedding \& Generalized Affinit}
+ Angular Embedding~\cite{name38} addresses this optimization problem by minimizing error $\varepsilon$:
+ \begin{equation}
+  \varepsilon{=}\sum_{p}\frac{\Sigma_{q}C(p,q)}{\Sigma_{p,q}C(p,q)} \centerdot{\lvert{z(p)}{-}{\bar{z_0}}(p)\rvert}^2
+ \end{equation}
+ \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{model.png}\\
+ \caption{\textbf{Angular Embedding~\cite{name38}}}\label{Figure1}
+ \end{figure}
+where C(p,q) accounts for possibly differing confidences in the pairwise estimates and $\theta$(p) is replaced by z(p)=$e^{i\theta(p)}$. As Figure~\ref{Figure1} shows, this mathematical convenience permits interpretation of z(.) as an embedding into the complex plane, with desired ordering $\theta$(.) corresponding to absolute angle. $\bar{z}$(p) is defined as the consensus embedding location for p according to its neighbors and $\theta$:
+\begin{equation}
+ \bar{z}(p)\sum_{p}\bar{C}(p,q)\centerdot e^{i\theta(p,q)} \centerdot z(q)
+\end{equation}
+\begin{equation}
+ \bar{C}(p,q)=\frac{C(p.q)}{\Sigma_{q}C(p.q)}
+\end{equation}
+Relaxing the unit norm constraint on z(.) yields a generalized eigenproblem:
+\begin{equation}
+Wz=\lambda{Dz}
+\end{equation}
+with D and W defined in terms of C and $\theta$ by:
+\begin{equation}
+ D=Diag(C1_n)
+\end{equation}
+\begin{equation}
+ W=C \centerdot e^{i\theta}
+\end{equation}
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{cp.png}\\
+ \caption{ \textbf{Complex affinities for grouping and figure/ground.}}\label{Figure2}
+ \end{figure}
+where n is the number of pixels, 1n is a column vector of ones, Diag($\centerdot$) is a matrix with its vector argument on the main diagonal, and ``$\centerdot$" denotes the matrix Hadamard product.For $\theta$ everywhere zero (W = C), this eigenproblem is identical to the spectral relaxation of Normalized Cuts~\cite{name29}, in which the second and higher eigenvectors encode grouping~\cite{name2,name29}. With nonzero entries in $\theta$, the first of the now complex-valued eigenvectors is nontrivial and its angle encodes rank ordering while the subsequent eigenvectors still encode grouping~\cite{name22}. They use the same decoding procedure as~\cite{name15} to read off this information.\\
+\par Figure~\ref{Figure2} illustrates how $W_B$(shown in green), $W_F$(red), and $W_G$(blue) cover the base cases in the space of pairwise grouping relationships. Combining them into a single energy model(generalized affinity) spans the entire space:
+\begin{equation}
+ W(p,q)=W_B(p,q)+W_F(p,q)+W_G(p,q)
+\end{equation}
+One can regard W(p,q) as a sum of binding, figure transition, and ground transition forces acting between p and q. Figure~\ref{Figure3} plots the onfiguration space of W(p,q) in which each component force is strong do not overlap, W behaves in distinct modes, with a smooth transition between them through the area of weak affinity near the origin.
+\par Learning to predict e(p),b(p,q), and f(p,q) suffices to determine all components of W. For computational efficiency, they predict pairwise relationships between each pixel and its immediate neighbors across multiple spatial scales. This defines a multiscale sparse W. As an adjustment prior to feeding W to the Angular Embedding solver of~\cite{name23}, they enforce Hermitian symmetry by assigning:
+\begin{equation}
+W \gets(W+W^*)/2
+\end{equation}
+ \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{ga.png}\\
+ \caption{ \textbf{Generalized affinity}}\label{Figure3}
+ \end{figure}
+\bibliographystyle{abbrv}
+\bibliography{yinyong2}
+\end{document}
+
