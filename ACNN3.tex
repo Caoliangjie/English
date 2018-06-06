@@ -1,0 +1,62 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Affinity CNN: Learning Pixel-Centric Pairwise Relations for Figure/Ground Embedding III}}
+\author{Liangjie Cao\\6 June 2018}
+\maketitle
+\section{Affinity Learning}
+Supervised traning of the authors system proceeds from a collection of images and associated ground-truth, \{ (I$_0$,S$_0$,R$_0$),(I$_1$,S$_1$,R$_1$),...\}. Here, I$_k$ is an image defined on domain $\Omega_k\subset{N^2}\centerdot{S_k:\Omega_k}\to{N}$ is a segmentation mapping each pixel to a region id, and R$_k$: $\Omega_k\to{R}$ is an rank ordering of pixels according to figure/ground layering. This data defines ground-truth pairwise relationships:
+\begin{equation}{\label{equation1}}
+\bar{b}_k(p,q)=1-\delta(S(p)-S(q))
+\end{equation}
+\begin{equation}{\label{equation2}}
+\bar{f}_k(p,q)=(sign(R(q)-R(p))+1)/2)
+\end{equation}
+\par As $f(p,q)$ is a conditonal probability, the authors generate training examples $\bar(f)_k(p,q)$ for pairs $(p,q)$ satisfying $\bar{b}_k(p,q)$= 1.
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{DAN.png}\\
+ \caption{ \textbf{Deep Affinity Network}}\label{Figure1}
+ \end{figure}
+\par Choosing a CNN to implement these predictors, they regard the problem as mapping an input image to a 48 channel output over the same domain. They adapt prior CNN designs for predicting output quantities at every pixel~\cite{name9,name8,name26} to their somewhat higher-dimensional prediction task. Specifically, they reuse the basic network design of~\cite{name26}, which first passes a large-scale coarse receptive field through an AlexNet~\cite{name19}-like subnetwork. It appends this subnetwork's output into a second scale subnetwork acting on a finer receptive field. Figure~\ref{Figure1} provides a complete layer diagram. In modifying~\cite{name26}, they increase the size of the penultimate feature map as well as the output dimensionality.
+\section{Experiments}
+Training their system for the generic perceptual task of segmentation and figure/ground layering requires a dataset fully annotated in this form. While there appears to be renewed interest in creating lager-scale dataset with such annotation~\cite{name39}, none has yet been released. The following subsetions detail, how, even with such scarcity of training data, their system achieves substantial improvements in figure/ground quality over prior work.\\
+Figure~\ref{Figure2} illustrates their method for overcoming this limitation. Given perfect(\emph{e.g.} ground-truth) short-range predictions as input, Angular Embedding generates an extremely high-quality global figure/ground estimate. In a real seting, we want robustness by having many estimates of pairwise relations over many scales. Ground-truth short-range connections suffice as they are perfect estimates. They use the globalized ground-truth figure/ground map as their training signal R in Equation~\ref{equation1}. The usual ground-truth segmentation serves as S in Equation~\ref{equation2}.
+ \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{compare.png}\\
+ \caption{ \textbf{Affinity learning for segmentation and figure/ground}}\label{Figure2}
+ \end{figure}
+\section{BSDS:Figure/Ground Benchmark}
+Table~\ref{Table1} quantitatively compares our ?gure/ground predictions and those of~\cite{name22} against ground-truth ?gure/ground on our 50 image test subset of BSDS~\cite{name26}. We consider both projection onto ground-truth segmentation and onto our own system¡¯s segmentation output. For the latter, as our system produces hierarchical segmentation, we use the region partition at a fixed level of the hierarchy, calibrated for optimal boundary F-measure. Figure~\ref{Figure3} and the supplementary material provide visual comparisons.
+ \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{fg.png}\\
+ \caption{ \textbf{Figure/ground prediction accuracy measured on ground-truth segmentation}}\label{Figure3}
+ \end{figure}
+  \begin{table}[htbp]
+  \centering
+ \begin{tabular}{|p{1.5cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|p{0.7cm}|}
+    \hline
+     Ground-truth &  R-ACC  & B-ACC &  B-ACC-50 & B-ACC-25\\
+    \hline
+    F/G: Ours & 0.62 & 0.69 & 0.72 & 0.73\\
+    \hline
+    F/G: Maire~\cite{name22} & 0.56 & 0.58 & 0.56 & 0.56\\
+    \hline
+  \end{tabular}
+  \caption{\textbf{Figure/ground benchmark results}} \label{Table1}
+  \end{table}
+\bibliographystyle{abbrv}
+\bibliography{yinyong2}
+\end{document}
+
