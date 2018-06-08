@@ -1,0 +1,43 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Single-Image Crowd Counting via Multi-Column Convolutional Neural Network}}
+\author{Liangjie Cao\\8 June 2018}
+\maketitle
+\abstract{\par The paper aims to develop a method than can accurately estimate the crowd count from an individual image with arbitrary crowd density and arbitrary perspective. To this end, the authors have proposed a simple but effective Multi-column Convolutional Neural Network (MCNN) architecture to map the image to its crowd density map. The proposed MCNN allows the input image to be of arbitrary size or resolution. By utilizing filters with receptive fields of different sizes, the features learned by each column CNN are adaptive to variations in people/head size due to perspective effect or image resolution. Furthermore, the true density map is computed accurately based on geometry-adaptive kernels which do not need knowing the perspective map of the input image. Since exiting crowd counting datasets do not adequately cover all the challenging situations considered in our work, the authors have collected and labelled a large new dataset that includes 1198 images with about 330,000 heads annotated. On this challenging new dataset, as well as all existing datasets, they conduct extensive experiments to verify the effectiveness of the proposed model and method. In particular, with the proposed simple MCNN model, their method outperforms all existing methods. In addition, experiments show that their model, once trained on one dataset, can be readily transferred to a new dataset.}
+\section{Introduction}
+ Many algorithms have been proposed in the literature for crowd counting. Earlier methods~\cite{name29} adopt a detection-style framework that scans a detector over two consecutive frames of a video sequence to estimate the number of pedestrians, based on boosting appearance and motion features.~\cite{name19,name30,name31} have used a similar detectionbased framework for pedestrian counting. In detectionbased crowd counting methods, people typically assume a crowd is composed of individual entities which can be detected by some given detectors~\cite{name13,name34,name18,name10}. The limitation of such detection-based methods is that occlusion among people in a clustered environment or in a very dense crowd significantly affects the performance of the detector hence the final estimation accuracy.\\
+ In this paper, they aim to conduct accurate crowd counting from an arbitrary still image, with an arbitrary camera perspective and crowd density (see Figure~\ref{Figure1} for some typical examples). To overcome many challenges, in this work, they propose a novel framework based on convolutional neural network (CNN)\cite{name16} for crowd counting in an arbitrary still image. More specifically, they propose a multi-column convolutional neural network (MCNN) inspired by the work of~\cite{name8}, which has proposed multi-column deep neural networks for image classification. In their model, an arbitrary number of columns can be trained on inputs preprocessed in different ways. Then final predictions are obtained by averaging individual predictions of all deep neural networks. Their MCNN contains three columns of convolutional neural networks whose filters have different sizes. Input of the MCNN is the image, and its output is a crowd density map whose integral gives the overall crowd count.
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{pp.png}\\
+ \caption{ \textbf{(a) Representative images of Part A in their new crowd dataset. (b) Representative images of Part B in their crowd dataset. All faces are blurred in (b) for privacy preservation.
+}}\label{Figure1}
+ \end{figure}
+\section{Multi-column CNN for Crowd Counting}
+To estimate the number of people in a given image via the Convolutional Neural Networks (CNNs), there are two natural configurations. One is a network whose input is the image and the output is the estimated head count. The other one is to output a density map of the crowd (say how many people per square meter), and then obtain the head count by integration.
+\section{Density map via geometry-adaptive kernels}
+Since the CNN needs to be trained to estimate the crowd density map from an input image, the quality of density given in the training data very much determines the performance of our method. They first describe how to convert an image with labeled people heads to a map of crowd density. If there is a head at pixel xi, they represent it as a delta function $\delta$($x-x_i$). Hence an image with N heads labeled can be represented as a function:
+\begin{equation}
+ H(x)=\sum_{i=1}^{N} \delta(x-x_i)
+\end{equation}
+To convert this to a continuous density function, they may convolve this function with a Gaussian kernel~\cite{name17} G¦Ò so that the density is F(x) = $H(x)*G_{\sigma}(x)$. However, such a density function assumes that these x$_i$ are independent samples in the image plane which is not the case here: In fact, each x$_i$ is a sample of the crowd density on the ground in the 3D scene and due to the perspective distortion, and the pixels associated with different samples x$_i$ correspond to areas of different sizes in the scene.
+\\Therefore, they should determine the spread parameter ¦Ò based on the size of the head for each person within the image. However, in practice, it is almost impossible to accurately get the size of head due to the occlusion in many cases, and it is also difficult to find the underlying relationship between the head size the density map. Interesting they found that usually the head size is related to the distance between the centers of two neighboring persons in crowded scenes (refer to Figure~\ref{Figure2}). As a compromise, for the density maps of those crowded scenes, they propose to dataadaptively determine the spread parameter for each person based on its average distance to its neighbors.
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{GK.png}\\
+ \caption{ \textbf{ Original images and corresponding crowd density maps obtained by convolving geometry-adaptive Gaussian kernels}}\label{Figure2}
+ \end{figure}
+\bibliographystyle{abbrv}
+\bibliography{yinyong3}
+\end{document}
+
