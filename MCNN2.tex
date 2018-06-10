@@ -11,7 +11,7 @@
 \def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
 \begin{document}
 \title{\textbf{Single-Image Crowd Counting via Multi-Column Convolutional Neural Network}}
-\author{Liangjie Cao\\10 June 2018}
+\author{Liangjie Cao\\Jun 10 2018}
 \maketitle
 \section{Multi-column CNN for density map estimation}
 Due to perspective distortion, the images usually contain heads of very different sizes, hence filters with receptive fields of the same size are unlikely to capture characteristics of crowd density at different scales. Therefore, it is more natural to use filters with different sizes of local receptive field to learn the map from the raw pixels to the density maps. Motivated by the success of Multi-column Deep Neural Networks (MDNNs)~\cite{name8}, they propose to use a Multi-column CNN (MCNN) to learn the target density maps. In their MCNN, for each column, they use the filters of different sizes to model the density maps corresponding to heads of different scales. For instance, filters with larger receptive fields are more useful for modeling the density maps corresponding to larger heads.\\
