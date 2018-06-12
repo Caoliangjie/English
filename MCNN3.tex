@@ -1,0 +1,84 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{Single-Image Crowd Counting via Multi-Column Convolutional Neural Network}
+\author{Liangjie Cao
+\\\\Jun 12, 2018}
+\maketitle
+\section{Experiments}
+ They compare their method with the work of Zhang \emph{et al.}, which also uses CNNs for crowd counting and achieved state-of-the-art accuracy at the time. Following the work of~\cite{name33}, they also compare their work with regression based method, which uses Local Binary Pattern (LBP) features extracted from the original image as input and uses ridge regression (RR) to predict the crowd number for each image. To extract LBP features, each image is uniformly divided into 8 x 8 blocks in Part A in Figure~\ref{Figure2} and 12 x 16 blocks in Part B in Figure~\ref{Figure2}, then a 59-dimensional uniform LBP in each block is extracted and all uniform LBP features are concatenated together to represent the image. The ground truth is a 64D or 192D vector where each entry is the total number of persons in corresponding patch. They compare the performances of all the methods on Shanghaitech dataset in Table~\ref{Table1}.
+ \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{new.png}\\
+ \caption{\textbf{Histograms of crowd counts of our new dataset}}\label{Figure2}
+ \end{figure}
+  \begin{table}[!ht]
+  \centering
+ \begin{tabular}{|p{2cm}|p{1cm}|p{1cm}|p{1cm}|p{1cm}|}
+    \hline
+        & \multicolumn{2}{c|}{Part A} & \multicolumn{2}{c|}{Part B}  \\
+    \hline
+    Method & MAE & MSE & MAE & MSE \\
+    \hline
+    LBP+RR & 303.2 & 371.0 & 59.1 & 81.7 \\
+    \hline
+    Zhang \emph{etal}~\cite{name33} & 181.8 & 277.7 & 32.0 & 49.8  \\
+    \hline
+    MCNN-CCR & 245.0 & 336.1 & 70.9 & 95.9\\
+    \hline
+     MCNN & \textbf{110.2} & \textbf{173.2} & \textbf{26.4} & \textbf{41.3}  \\
+     \hline
+  \end{tabular}
+  \caption{\textbf{Comparing performances of different methods on Shanghaitech dataset}} \label{Table1}
+  \end{table}
+\section{The effect of pretraining in MCNN}
+  They show the effect of our model without pretraining on Shanghaitech dataset Part A in Figure~\ref{Figure1}. They see that pretrained network outperforms the network without pretraining. The result verifies the necessity of pretraining for MCNN as optimization starting from random initialization tends to fall into local minima.
+   \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{comp.png}\\
+ \caption{\textbf{Comparing single column CNNs with MCNN and MCNN w/o pretraining on Part A. L, M, S stand for large kernel, medium kernel, small kernel respectively}}\label{Figure1}
+ \end{figure}
+\section{Single column CNNs vs MCNN}
+Figure~\ref{Figure1} shows the comparison of single column CNNs with MCNN on Shanghaitech dataset Part A. It can be seen that MCNNs significantly outperforms each single column CNN for both MAE and MSE. This verifies the effectiveness of the MCNN architecture.
+\section{Comparison of different loss functions}
+  They evaluate the performance of our framework with different loss functions. Other than mapping the images to their density maps, they can also map the images to the total head counts in the image directly. For the input image $X_i$ (i = 1,...,N), its total head count is $z_i$, and $F(X_i;\theta)$ stands for the estimated density map and $\theta$ is the parameters of MCNN. Then they arrive the following objective function:
+\begin{equation}
+L(\theta)=\frac{1}{2N}\sum_{i=1}^{N}\|\iint_{S}F(X_i;\theta)dxdy-z_i\|^2
+\end{equation}
+\par Here $S$ stands for the spatial region of estimated density map, and ground truth of the density map is not used. For this loss, they also pretrain CNNs in each column separately. They call such a baseline as MCNN based crowd count regression (MCNN-CCR). Performance based on such loss function is listed in Table~\ref{Table1}, which is also compared with two existing methods as well as the method based on density map estimation (simply labeled as MCNN). They see that the results based on crowd count regression is rather poor. In a way, learning density map manages to preserve more information of the image, and subsequently helps improve the count accuracy.
+\section{The UCF CC 50 dataset}
+The UCF\_CC\_50 dataset is firstly introduced by H. Idrees \emph{et al.}~\cite{name12}. This dataset contains 50 images from the Internet. It is a very challenging dataset, because of not only limited number of images, but also the crowd count of the image changes dramatically. The head counts range between 94 and 4543 with an average of 1280 individuals per image. The authors provided 63974 annotations in total for these fifty images. They perform 5-fold cross-validation by following the standard setting in~\cite{name12}. The same data augmentation approach as in that in Shanghaitech dataset.
+ They compare their method with four existing methods on UCF\_CC\_50 dataset in Table~\ref{Table2}. Rodriguez \emph{et al.}~\cite{name26} employs density map estimation to obtain better head detection results in crowd scenes. Lempitsky \emph{et al.}~\cite{name17} adopts
+dense SIFT features on randomly selected patches and the MESA distance to learn a density regression model. The method presented in~\cite{name12} gets the crowd count estimation by using multi-source features. The work of Zhang \emph{et al.}~\cite{name33} is based on crowd CNN model to estimate the crowd count of an image. Their method achieves the best MAE, and comparable MSE with existing methods.
+ \begin{table}[htbp]
+  \centering
+ \begin{tabular}{|p{3cm}|p{1cm}|p{1cm}|}
+    \hline
+     Method &  MAE & MSE \\
+    \hline
+    Rodriguez \emph{et al.}~\cite{name26} & 655.7 & 697.8\\
+    \hline
+    Lempitsky \emph{et al.}~\cite{name17} & 493.4 & 487.1 \\
+    \hline
+    Idrees \emph{et al.}~\cite{name12} & 419.5 & 541.6\\
+    \hline
+    Zhang \emph{et al.}~\cite{name33} & 467.0 & 498.5\\
+    \hline
+     MCNN & 377.6 & 509.1\\
+    \hline
+  \end{tabular}
+  \caption{\textbf{Comparing results of different methods on the UCF CC 50 dataset}} \label{Table2}
+  \end{table}
+\bibliographystyle{plain}
+\bibliography{yinyong3}
+\end{document}
+
