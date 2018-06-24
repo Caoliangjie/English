@@ -1,0 +1,47 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Image Question Answering using Convolutional Neural Network with Dynamic Parameter Prediction II
+}}
+\author{Liangjie Cao\\\\ Jun 24, 2018}
+\maketitle
+\section{Related Work}
+Deep learning based approaches demonstrate competitive performances in ImageQA~\cite{name1,name18,name23,name6,name10}. Most approaches based on deep learning commonly use CNNs to extract features from image while they use different strategies to handle question sentences. Some algorithms employ embedding of joint features based on image and question~\cite{name1,name10,name18}. However, learning a softmax classifier on the simple joint features-concatenation of CNN-based image features and continuous bag-of-words representation of a question¡ªperforms better than LSTM-based embedding on COCO-QA~\cite{name23} dataset. Another line of research is to utilize CNNs for feature extraction from both image and question and combine the two features~\cite{name16}; this approach demonstrates impressive performance on DAQUAR~\cite{name17} dataset by allowing to fine-tune the whole parameters.
+\par The prediction of the weight parameters in deep neural networks has been explored in~\cite{name2} in the context of zeroshot learning. To perform classification of unseen classes, it trains a multi-layer perceptron to predict a binary classifier for class-specific description in text. However, this method is not directly applicable to ImageQA since finding solutions based on the combination of question and answer is a more complex problem than the one discussed in~\cite{name2}, and ImageQA involves a significantly larger set of candidate answers, which requires much more parameters than the binary classification case. Recently, a parameter reduction technique based on a hashing trick is proposed by Chen \emph{et al.}~\cite{name3} to fit a large neural network in a limited memory budget. However, applying this technique to the dynamic prediction of parameters in deep neural networks is not attempted yet to our knowledge.
+\begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{procedure.png}\\
+ \caption{Overall architecture of the proposed Dynamic Parameter Prediction network (DPPnet), which is composed of the classification network and the parameter prediction network. The weights in the dynamic parameter layer are mapped by a hashing trick from the candidate weights obtained from the parameter prediction network}\label{Figure1}
+ \end{figure}
+\section{Network Architecture}
+Figure~\ref{Figure1} illustrates the overall architecture of the proposed algorithm. The network is composed of two subnetworks: classification network and parameter prediction network. The classification network is a CNN. One of the fully-connected layers in the CNN is the dynamic parameter layer, and the weights in the layer are determined adaptively by the parameter prediction network. The parameter prediction network has GRU cells and a fully-connected layer. It takes a question as its input, and generates a realvalued vector, which corresponds to candidate weights for the dynamic parameter layer in the classification network. Given an image and a question, their algorithm estimates the weights in the dynamic parameter layer through hashing with the candidate weights btained from the parameter prediction network. Then, it feeds the input image to the classification network to obtain the final answer. More details of the proposed network are discussed in the following subsections.
+\section{Classification Network}
+ They put the dynamic parameter layer in the second last fully-connected layer instead of the classification layer because it involves the smallest number of parameters. As the number of parameters in the classification layer increases in proportion to the number of possible answers, predicting the weights for the classification layer may not be a good option to general ImageQA problems in terms of scalability. Their choice for the dynamic parameter layer can be interpreted as follows. By fixing the classification layer while adapting the immediately preceding layer, we obtain the task-independent semantic embedding of all possible answers and use the representation of an input embedded in the answer space to solve an ImageQA problem. Therefore, the relationships of the answers globally learned from all recognition tasks can help solve new ones involving unseen classes, especially in multiple choice questions. For example, when not the exact ground-truth word (\emph{e.g.}, kitten) but similar words (\emph{e.g.}, cat and kitty) are shown at training time, the network can still predict the close answers (\emph{e.g.}, kitten) based on the globally learned answer embedding. Even though they could also exploit the benefit of answer embedding based on the relations among answers to de?ne a loss function, they leave it as their future work.
+ \section{Parameter Prediction Networ}
+ Let $\omega_1$,...,$\omega_T$ be the words in a question $q$, where $T$ is the number of words in the question. In each time step $t$, given the embedded vector $x_t$ for a word $\omega_t$, the GRU encoder updates its hidden state at time $t$, denoted by $h_t$, using the following equations:
+ \begin{equation}
+ r_t=\sigma(W_\tau{x_t}+U_r{h_{t-1}})
+ \end{equation}
+  \begin{equation}
+  z_t=\sigma(W_z{x_t}+U_z{h_{t-1}})
+ \end{equation}
+  \begin{equation}
+  \bar{h}_{t}=tanh(W_h{x_t}+U_h(r_t\odot{h_{t-1}}))
+ \end{equation}
+ \begin{equation}
+ h_t=(1-z_t)\odot{h_{t-1}}+z_t\odot\bar{h}_t
+ \end{equation}
+ \par where $r_t$ and $z_t$ respectively denote the reset and update gates at time $t$, and $\bar{h}_t$ is candidate activation at time $t$. In addition, $\odot$ indicates element-wise multiplication operator and $\sigma()$ is a sigmoid function. Note that the coefficient matrices related to GRU such as $W_r$, $W_z$, $W_h$, $U_r$, $U_z$, and $U_h$ are learned by our training algorithm. 
+\bibliographystyle{abbrv}
+\bibliography{yinyong6}
+\end{document}
+
