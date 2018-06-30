@@ -1,0 +1,99 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Image-to-Image Translation with Conditional Adversarial Networks
+}}
+\author{Liangjie Cao\\\\ Jun 30, 2018}
+\maketitle
+\abstract{\begin{figure}[htbp]
+ \includegraphics[width=0.5\textwidth]{pl.png}\\
+ \caption{Many problems in image processing, graphics, and vision involve translating an input image into a corresponding output image.
+These problems are often treated with application-specific algorithms, even though the setting is always the same: map pixels to pixels.
+Conditional adversarial nets are a general-purpose solution that appears to work well on a wide variety of these problems. Here we show
+results of the method on several. In each case we use the same architecture and objective, and simply train on different data}\label{Figure1}
+ \end{figure}
+The authors investigate conditional adversarial networks as a general-purpose solution to image-to-image translation
+problems. These networks not only learn the mapping from
+input image to output image, but also learn a loss function to train this mapping. This makes it possible to apply
+the same generic approach to problems that traditionally
+would require very different loss formulations. So they demonstrate that this approach is effective at synthesizing photos
+from label maps, reconstructing objects from edge maps,
+and colorizing images, among other tasks. As a commu-
+nity, they no longer hand-engineer our mapping functions,
+and this work suggests they can achieve reasonable results
+without hand-engineering our loss functions either.}
+\par Many problems in image processing, computer graphics,
+and computer vision can be posed as “translating” an input
+image into a corresponding output image. Just as a concept may be expressed in either English or French, a scene may
+be rendered as an RGB image, a gradient field, an edge map,
+a semantic label map, etc. In analogy to automatic language
+translation, we define automatic image-to-image translation
+as the problem of translating one possible representation of
+a scene into another, given sufficient training data (see Fig-
+ure 1). One reason language translation is difficult is be-
+cause the mapping between languages is rarely one-to-one
+– any given concept is easier to express in one language
+than another. Similarly, most image-to-image translation
+problems are either many-to-one (computer vision) – map-
+ping photographs to edges, segments, or semantic labels,
+or one-to-many (computer graphics) – mapping labels or
+sparse user inputs to realistic images. Traditionally, each of
+these tasks has been tackled with separate, special-purpose
+machinery (\emph{e.g.},~\cite{name7,name15,name11,name1,name3,name37,name21,name26,name9,name42,name46}), despite the fact that the setting is always the same: predict
+pixels from pixels. Our goal in this paper is to develop a
+common framework for all these problems.
+\par The community has already taken significant steps in this
+direction, with convolutional neural nets (CNNs) becoming
+the common workhorse behind a wide variety of image pre-
+diction problems. CNNs learn to minimize a loss function –
+an objective that scores the quality of results – and although
+the learning process is automatic, a lot of manual effort still
+goes into designing effective losses. In other words, we still
+have to tell the CNN what we wish it to minimize. But,
+just like Midas, we must be careful what we wish for! If
+we take a naive approach, and ask the CNN to minimize
+Euclidean distance between predicted and ground truth pix-
+els, it will tend to produce blurry results~\cite{name46}. This is
+because Euclidean distance is minimized by averaging all
+plausible outputs, which causes blurring. Coming up with
+loss functions that force the CNN to do what we really want
+– \emph{e.g.}, output sharp, realistic images – is an open problem
+and generally requires expert knowledge.
+\section{Method}
+\begin{figure}[htbp]
+ \includegraphics[width=0.5\textwidth]{tl.png}\\
+ \caption{Training a conditional GAN to predict aerial photos from
+maps. The discriminator, D, learns to classify between real and
+synthesized pairs. The generator learns to fool the discriminator.
+Unlike an unconditional GAN, both the generator and discrimina-
+tor observe an input image}\label{Figure2}
+ \end{figure}
+GANs are generative models that learn a mapping from
+random noise vector $z$ to output image $y$: G : $z\to{y}$~\cite{name14}. In contrast, conditional GANs learn a mapping from
+observed image $x$ and random noise vector $z$, to $y$: $G$ :
+$\{x, z\} \to$ $y$. The generator $G$ is trained to produce outputs
+that cannot be distinguished from ``real" images by an ad-
+versarially trained discrimintor, $D$, which is trained to do as
+well as possible at detecting the generator’s ``fakes". This
+training procedure is diagrammed in Figure~\ref{Figure2}.
+\par The objective of a conditional GAN can be expressed as:
+\begin{equation}
+\begin{split}
+L_{cGAN}(G,D)=E_{x,y~Pdata}[logD(x,y)]+\\E_{x~Pdata(x),z~p_z(z)}[log(1-D(x,G(x,z)))]
+\end{split}
+\end{equation}
+where $G$ tries to minimize this objective against an ad-
+versarial D that tries to maximize it, \emph{i.e.} $G^∗=
+argmin_{G}\max_{D}L_{cGAN}(G, D)$.
+\bibliographystyle{abbrv}
+\bibliography{yinyong7}
+\end{document}
