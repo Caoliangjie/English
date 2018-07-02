@@ -1,0 +1,80 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Image-to-Image Translation with Conditional Adversarial Networks
+}}
+\author{Liangjie Cao\\\\ July 2, 2018}
+\maketitle
+\section{Method}
+To test the importance of conditioning the discriminator, the authors also compare to an unconditional variant in which the discriminator does not observe $x$:
+ \begin{equation}
+ \begin{split}
+ L_GAN(G,D)=E_{y-p_{data}(y)}[logD(y)]+\\E_{x-p_{data}(x),z-p_z(z)}[log(1-D(G(x,z)))]
+ \end{split}
+ \end{equation}
+ Previous approaches have found it beneficial to mix the GAN objective with a more traditional loss, such as $L2$ distance. The discriminator's job remains unchanged, but the generator is tasked to not only fool the discriminator but also to be near the ground truth output in an $L2$ sense. They also explore this option, using $L1$ distance rather than $L2$ as $L1$ encourages less blurring:
+ \begin{equation}
+ L_{l1}(G)=E_{x,y,z}[\parallel{y}-G(x,z)\parallel_1]
+ \end{equation}
+ Their final objective is:
+ \begin{equation}
+  G^*=\arg\min_{G}\max_{D}L_{cGAN}(G,D)+\lambda_{L1}(G)
+ \end{equation}
+\\ Without $z$, the net could still learn a mapping from $x$ to
+$y$, but would produce deterministic outputs, and therefore
+fail to match any distribution other than a delta function.
+Past conditional GANs have acknowledged this and pro-
+vided Gaussian noise z as an input to the generator, in addi-
+tion to $x$ (\emph{e.g.},~\cite{name39}). In initial experiments, they did not find this strategy effective – the generator simply learned to ig-
+nore the noise – which is consistent with Mathieu \emph{et al.}~\cite{name27}.
+Instead, for our final models, we provide noise only in the
+form of dropout, applied on several layers of our generator
+at both training and test time. Despite the dropout noise, the authors observe very minor stochasticity in the output of their nets.
+Designing conditional GANs that produce stochastic out-
+put, and thereby capture the full entropy of the conditional
+distributions they model, is an important question left open
+by the present work.
+ \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{UNet.png}\\
+ \caption{Two choices for the architecture of the generator. The
+``U-Net"~\cite{name34} is an encoder-decoder with skip connections be-
+tween mirrored layers in the encoder and decoder stacks.}\label{Figure1}
+ \end{figure}
+\section{Generator with skips}
+A defining feature of image-to-image translation problems
+is that they map a high resolution input grid to a high resolu-
+tion output grid. In addition, for the problems they consider,
+the input and output differ in surface appearance, but both
+are renderings of the same underlying structure. Therefore,
+structure in the input is roughly aligned with structure in the
+output. They design the generator architecture around these
+considerations.
+\par In such a network, the input is passed through a series of lay-
+ers that progressively downsample, until a bottleneck layer,
+at which point the process is reversed (Figure~\ref{Figure1}). Such a
+network requires that all information flow pass through all
+the layers, including the bottleneck. For many image trans-
+lation problems, there is a great deal of low-level informa-
+tion shared between the input and output, and it would be desirable to shuttle this information directly across the net.
+For example, in the case of image colorizaton, the input and
+output share the location of prominent edges.
+\par To give the generator a means to circumvent the bot-
+tleneck for information like this, they add skip connections,
+following the general shape of a ``U-Net"~\cite{name34} (Figure~\ref{Figure1}).
+Specifically, they add skip connections between each layer i
+and layer $n-i$, where $n$ is the total number of layers. Each
+skip connection simply concatenates all channels at layer $i$
+with those at layer $n-i$.
+\bibliographystyle{abbrv}
+\bibliography{yinyong7}
+\end{document}
