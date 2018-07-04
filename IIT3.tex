@@ -1,0 +1,116 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Image-to-Image Translation with Conditional Adversarial Networks
+}}
+\author{Liangjie Cao\\\\ July 4, 2018}
+\maketitle
+\section{Experiments}
+To explore the generality of conditional GANs, the authors test
+the method on a variety of tasks and datasets, including both
+graphics tasks, like photo generation, and vision tasks, like
+semantic segmentation:\par
+$\bullet$ $Semantic$ $labels\leftrightarrow{photo}$, trained on the Cityscapes
+dataset~\cite{name4}.
+\par$\bullet$ $Architectural$ $labels\leftrightarrow{photo}$, trained on the CMP Fa-
+cades dataset~\cite{name31}.
+\par$\bullet$ $Map\leftrightarrow{aerial}$ $photo$, trained on data scraped from
+Google Maps.
+\par$\bullet$ $BW\to{color}$ $photos$, trained on~\cite{name35}.
+\par$\bullet$ $Edges\to{photo}$, trained on data from~\cite{name49} and~\cite{name44}; binary edges generated using the HED edge detector~\cite{name42} plus postprocessing.
+\par$\bullet$ $Sketch\to{photo}$: tests edges$\to$photo models on human-drawn sketches from~\cite{name10}.
+\par$\bullet$ $Day\to{night}$, trained on~\cite{name21}.
+\par Details of training on each of these datasets are pro-
+vided in the Appendix. In all cases, the input and out-
+put are simply 1-3 channel images. Qualitative results
+are shown in Figures~\ref{Figure8},~\ref{Figure9},~\ref{Figure10},~\ref{Figure11},~\ref{Figure12},~\ref{Figure14},~\ref{Figure15},~\ref{Figure16}, and~\ref{Figure13}. Several failure cases are highlighted in Figure~\ref{Figure17}. 
+   \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{10.png}\\
+ \caption{Applying a conditional GAN to semantic segmenta-
+tion. The cGAN produces sharp images that look at glance like
+the ground truth, but in fact include many small, hallucinated ob-
+jects}\label{Figure10}
+ \end{figure}
+    \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{3.png}\\
+ \caption{Example results of our method on Cityscapes labels$\to$photo, compared to ground truth}\label{Figure11}
+ \end{figure}
+  \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{2.png}\\
+ \caption{Example results on Google Maps at 512x512 resolution (model was trained on images at 256x256 resolution, and run convolu-
+tionally on the larger images at test time). Contrast adjusted for clarity}\label{Figure8}
+ \end{figure}
+   \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{4.png}\\
+ \caption{Example results of our method on Cityscapes labels→photo, compared to ground truth}\label{Figure12}
+ \end{figure}
+   \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{5.png}\\
+ \caption{Example results of our method on day→night, compared to ground truth}\label{Figure13}
+ \end{figure}
+    \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{6.png}\\
+ \caption{Example results of our method on automatically detected edges→handbags, compared to ground truth}\label{Figure14}
+ \end{figure}
+     \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{7.png}\\
+ \caption{Example results of our method on automatically detected edges→shoes, compared to ground truth}\label{Figure15}
+ \end{figure}
+     \begin{figure}[!htbp]
+ \centering
+ \includegraphics[width=0.5\textwidth]{8.png}\\
+ \caption{Example results of the edges→photo models applied to human-drawn sketches from~\cite{name10}. Note that the models were trained on
+automatically detected edges, but generalize to human drawings}\label{Figure16}
+ \end{figure}
+      \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{17.png}\\
+ \caption{Example failure cases. Each pair of images shows input on the left and output on the right. These examples are selected as some
+of the worst results on our tasks. Common failures include artifacts in regions where the input image is sparse, and difficulty in handling
+unusual inputs}\label{Figure17}
+ \end{figure}
+     \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{tu.png}\\
+ \caption{Colorization results of conditional GANs versus the L2 regression from~\cite{name46} and the full method (classfication with rebalancing) from~\cite{name48}. The cGANs can produce compelling colorizations (first two rows), but have a common failure mode of producing a grayscale or desaturated result(last row)}\label{Figure9}
+ \end{figure}
+ \newpage
+ \par They note that decent re-
+sults can often be obtained even on small datasets. Their fa-
+cade training set consists of just 400 images (see results in
+Figure~\ref{Figure12}), and the day to night training set consists of only
+91 unique webcams (see results in Figure~\ref{Figure13}). On datasets
+of this size, training can be very fast: for example, the re-
+sults shown in Figure~\ref{Figure12} took less than two hours of training
+on a single Pascal Titan X GPU. At test time, all models run
+in well under a second on this GPU.
+\par Actually I visited their website to make sure how the model works. Figure~\ref{Figure1} and Figure~\ref{Figure2} shows what I have done. It's amazing that though my drawing ability is poor, this model can roughly get the key factors of my picture. (To be honest, I draw a rabbit in Figure~\ref{Figure2} so the output still has the features of cats.)
+     \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{test.png}\\
+ \caption{My online testing I}\label{Figure1}
+ \end{figure}
+      \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=0.5\textwidth]{test2.png}\\
+ \caption{My online testing II}\label{Figure2}
+ \end{figure}
+\bibliographystyle{abbrv}
+\bibliography{yinyong7}
+\end{document}
