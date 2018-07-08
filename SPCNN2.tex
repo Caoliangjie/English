@@ -1,0 +1,64 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Spherical CNNS
+}}
+\author{Liangjie Cao\\\\ July 8, 2018}
+\maketitle
+\section{Correlation on the Sphere and Rotation Group}
+ \par In order to define the spherical correlation, the authors need to know not only how to rotate points $x\in{S^2}$ but also how to rotate filters (\emph{i.e.} functions) on the sphere. To this end, they introduce the rotation operator $L_R$ that takes a function $f$ and produces a rotated function $L_R{f}$ by composing $f$ with the rotation $R^{-1}$:
+\begin{equation}
+[L_R{f}](x)=f(R^{-1}x)
+\end{equation}\label{1}
+ \par The inner product on the vector space of spherical signals is defined as:
+\begin{equation}
+<\psi,f>=\int_{S^2}\sum_{k=1}^{K}\psi_{k}(x)f_k(x)dx
+\end{equation}\label{2}
+The integration measure $dx$ denotes the standard rotation invariant integration measure on the sphere, which can be expressed as $d\alpha$ $R$ $sin(\beta)d\beta/4\pi$ in R spherical coordinates. The invariance of the measure ensures that $\int_{S^2}f(Rx)dx=\int_{S^2}f(x)dx$, for any rotation $R\in{SO(3)}$. That is, the volume under a spherical height map does not change when rotated. Using this fact, they can show that $L_{R^{-1}}$ is adjoint to $L_R$, which implies that $L_R$ is unitary:
+\begin{equation}
+<L_R{\psi},f>=\int_{S^2}\sum_{k=1}^{K}\psi_k(R^{-1}x)f_{k}(x)dx
+\end{equation}\label{3}
+Then we know that this two function is equal. With these ingredients in place, we are now ready to state mathematically what was stated in words before. For spherical signals $f$ and $\psi$, the authors define the correlation as:
+\begin{equation}
+[\psi\star{f}]=<L_{R}\psi,f>=\int_{S^2}\sum_{k=1}^{K}\psi_k(R^{-1}x)f_{k}(x)dx
+\end{equation}\label{4}
+\par As mentioned before, the output of the spherical correlation is a function on $SO(3)$. This is perhaps somewhat counterintuitive, and indeed the conventional definition of spherical convolution gives as output a function on the sphere. However, the conventional definition effectively restricts the filter to be circularly symmetric about the $Z$ axis, which would greatly limit the expressive capacity of the network.
+\par The authors defined the rotation operator $L_R$ for spherical signals (Eq.~\ref{1}), and used it to define spherical cross-correlation (Eq.~\ref{4}). To define the $SO(3)$ correlation, they need to generalize the rotation operator so that it can act on signals defined on $SO(3)$. As we will show, naively reusing Eq.~\ref{1} is the way to go. That is, for $f: SO(3)\to\mathbb{R}^K$, and $R$, $Q\in{SO(3)}$:
+\begin{equation}
+[L_R{f}](Q)=f(R^{-1}Q)
+\end{equation}\label{5}
+Note that while the argument $R^{-1}x$ in Eq.~\ref{1} denotes the rotation of $x\in{S}$ by $R\in{SO(3)}$, the analogous term $R^{−1}Q$ in Eq.~\ref{5} denotes to the composition of rotations (\emph{i.e.} matrix multiplication).
+\par Using the same analogy as before, they can define the correlation of
+two signals on the rotation group, $f,\psi:SO(3)\to\mathbb{R}^K$, as follows:
+\begin{equation}
+[\psi\star{f}](R)=\int_{SO(3)}\sum_{k=1}^{K}\psi_k(R^{-1}Q)f_{k}(Q)dQ
+\end{equation}
+The derivation is valid for spherical correlation as well as rotation group correlation.
+   \begin{figure}[!htb]
+ \centering
+ \includegraphics[width=3in]{corr.png}\\
+ \caption{Spherical correlation in the spectrum. The signal $f$ and the locally-supported filter $\psi$ are Fourier transformed, block-wise tensored, summed over input channels, and finally inverse transformed. Note that because the filter is locally supported, it is faster to use a matrix multiplication (DFT) than an FFT algorithm for it. They parameterize the sphere using spherical coordinates $\alpha$, $\beta$,
+and $SO(3)$ with ZYZ-Euler angles $\alpha$, $\beta$, $\gamma$}\label{Figure1}
+ \end{figure}
+\section{Fast Spherical Correlation with G-FFT}
+For functions on the sphere and rotation group, there is an analogous transform, which they will refer to as the generalized Fourier transform (GFT) and a corresponding fast algorithm (GFFT). This transform finds it roots in the representation theory of groups, but due to space constraints we will not go into details here and instead refer the interested reader to~\cite{name4} and~\cite{name3}. This process can be seen in Fig.~\ref{Figure1}.
+\par The inverse $SO(3)$ Fourier transform is defined as:
+\begin{equation}
+f(R)=\sum_{i=0}^{b}(2l+1)\sum_{m=-l}^{l}\sum_{n=-l}^{l}\hat{f_{mn}^{l}}U_{mn}^{l}(R)
+\end{equation}
+and similarly for $S^2$. The maximum frequency $b$ is known as the bandwidth, and is related to the resolution of the spatial grid~\cite{name5}.
+\par The algorithm for the $S^2$-FFTs is very similar, only in this case their FFT over the $\alpha$ axis only, and do a linear contraction with precomputed Legendre functions over the $\beta$ axis.
+\par Their code is available at \url{https://github.com/jonas-koehler/s2cnn}.
+\bibliographystyle{abbrv}
+\bibliography{yinyong8}
+\end{document}
