@@ -1,0 +1,71 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Spherical CNNS
+}}
+\author{Liangjie Cao\\\\ July 8, 2018}
+\maketitle
+\section{Experiments}
+In this paper we have presented the first instance of a group equivariant CNN for a continuous, non-commutative group. In the discrete case, one can prove that the network is
+exactly equivariant, but although they can prove
+$[L_{R}f]\times\psi=L_R[f\times\psi]$ for continuous functions
+$f$ and $\psi$ on the sphere or rotation group, this is
+not exactly true for the discretized version that they actually compute. Hence, it is reasonable to ask if there are any significant discretization artifacts and whether they affect the equivariance properties of the network. If equivariance can
+not be maintained for many layers, one may expect the weight sharing scheme to become much
+less effective.
+\begin{figure}
+\centering
+\includegraphics[width=3in]{Delta.png}
+\caption{$\Delta$ as a function of the resolution and the number of layer}
+\label{Fig1}
+\end{figure}
+\par They first tested the equivariance of the $SO(3)$ correlation at various resolutions $b$. The authors do this by first sampling $n=500$ random rotations $R_i$ as well as $n$ feature maps $f_i$ with $K=$ 10 channels. Then they compute $\Delta=\frac{1}{n}\sum_{i=1}^{n}std(L_{R}\Phi(f_i)-\Phi(L_R,f_i))/std(\Phi(f_i))$, where $\Phi$ is a composition of $SO(3)$ correlation layers with randomly initialized filters. In case of perfect equivariance, they expect this quantity to be zero. The results (Figure~\ref{Fig1}(top)), show that although the approximation error $\Delta$ grows with the resolution and the number of layers, it stays manageable for the range of resolutions of interest.
+\par They repeat the experiment with ReLU activation function after each correlation operation. As shown in figure~\ref{Fig1}(bottom), the error is higher but stays flat. This indicates that the error is not due to the network layers, but due to the feature map rotation, which is exact only for bandlimited functions.
+\begin{figure}
+\centering
+\includegraphics[width=3in]{ball.png}
+\caption{The ray line is cast from the surface of the sphere in direction of its center.The first intersection with the model gives the values of the signal on the sphere. The two images of the right represent two spherical signals in ($\alpha,\beta$) representation. They contain respectively the distance from the sphere and the cosine of the ray with the normal of the model. The red dot corresponds to the pixel set by the red line}
+\label{Fig3}
+\end{figure}
+\subsection{Rotated MNIST on the sphere}
+In this experiment they evaluate the generalization performance with respect to rotations of the input. For testing they propose a version MNIST dataset projected on the sphere (see Fig.~\ref{Fig2}). They created two instances of this dataset: one in which each digit is projected on the northern hemisphere and one in which each projected digit is additionally randomly rotated.
+\begin{figure}
+\centering
+\includegraphics[width=3in]{Mnist.png}
+\caption{Two MNIST digits projected onto the sphere using stereographic projection. Mapping back to the plane results in non-linear distortions}
+\label{Fig2}
+\end{figure}
+\paragraph{Architecture and Hyperparameters:} As abaseline model, the authors use a simple CNN with layers conv-ReLU-conv-ReLU-FC-softmax, with
+filters of size $5\times5$, $k$= 57, 114, 10 channels, and stride 3 in both layers. They compare to a spherical CNN with layers $S^2$ conv-ReLU-
+$SO(3)$conv-ReLU-FC-softmax, bandwidth $b$ = 30, 10, 5 and $k$ = 100, 200, 10 channels. Both models have about $165K$ parameters. 
+\paragraph{Results:}We trained each model on the non-rotated (NR) and the rotated (R) training set and evaluated it on the non-rotated and rotated test set. See table~\ref{T1}. While the planar CNN achieves high accuracy in the NR / NR regime, its performance
+in the R / R regime is much worse, while the spherical CNN is unaffected. When trained on the non-rotated dataset and evaluated on the rotated dataset (NR / R), the planar CNN does no better than random chance. The spherical CNN shows a slight decrease in performance compared to R/R, but still performs quite well.
+  \begin{table}[!htbp]
+  \centering
+ \begin{tabular}{p{2cm}|p{1cm}p{1cm}p{1cm}}
+      & NR-NR & R-R & NR-R \\
+   \hline
+   planar & 0.99 & 0.45 & 0.09 \\
+   spherical & 0.91 & 0.91 & 0.85 \\
+   \hline 
+  \end{tabular}
+  \caption{Test accuracy for the networks evaluated on the spherical MNIST dataset. Here R = rotated, NR = non-rotated and X / Y denotes, that the network was trained on X and evaluated on Y} \label{T1}
+  \end{table}
+ \section{Recognition of 3D shapes}
+ Next, the authors applied $S^2CNN$ to 3D shape classification. The SHREC17 task~\cite{name6} contains 51300 3D models taken from the ShapeNet dataset~\cite{name7} which have to be classified into 55 common categories (tables, airplanes, persons, \emph{etc.}). There is a consistently aligned regular dataset and a version in which all models are randomly perturbed by rotations. They concentrate on the latter to test the quality of our rotation equivariant representations learned by $S^2CNN$. 
+\par The project the 3D meshes onto an enclosing sphere using a straightforward ray casting scheme (see Fig.~\ref{Fig3}). For each point on the sphere we send a ray towards the origin and collect 3 types of information from the intersection: ray length and cos / sin of the surface angle. They further augment this information with ray casting information for the convex hull of the model, which in total gives us 6 channels for the signal. This signal is discretized using a Driscoll-Healy grid~\cite{name8} with bandwidth b = 128. Ignoring non-convexity of surfaces we assume this projection
+captures enough information of the shape to be useful for the recognition task.
+
+\bibliographystyle{abbrv}
+\bibliography{yinyong8}
+\end{document}
