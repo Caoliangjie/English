@@ -1,0 +1,49 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Spherical CNNS
+}}
+\author{Liangjie Cao\\\\ July 16, 2018}
+\maketitle
+\section{Text Embeddings}
+  \begin{figure}[!htbp]
+  	\centering
+  	\includegraphics[width=3in]{CRNN.png}\\
+  	\caption{The char-CNN-RNN encoder maps images to a common embedding space. Images and descriptions which match are closer to each other. Here the embedding space is $\mathbb{R}^2$ to make visualisation easier. In practice, the preprocessed descriptions are in $\mathbb{R} ^{1024}$}\label{Figure1} 
+  \end{figure}
+The text descriptions must be vectorised before they can be used in any model. These vectorisations are commonly referred to as text embeddings. Text embedding models were not the focus of this work, and that is why the already computed vectorisations by Reed \emph{et al.}~\cite{name6} are used. Other state of the art models~\cite{name7,name8} use the same embeddings and their usage makes comparisons between models easier.
+\par The text embeddings are computed using the char-CNN-RNN encoder proposed in~\cite{name6}. The encoder maps the images and the captions to a common embedding space such that images and descriptions which match are mapped to vectors with a high inner product. For this mapping, a Convolutional Neural Network (CNN) processes the images, and a
+hybrid Convolutional-Recurrent Neural Network (RNN) transforms the text descriptions(Figure~\ref{Figure1}).
+\par A common alternative is Skip-Thought Vectors~\cite{name9} which is a pure language-based model. The model maps sentences with similar syntax and semantics to similar vectors. Nevertheless, the char-CNN-RNN encoder is better suited for vision tasks as it uses the corresponding images of the descriptions as well. The embeddings are similar to the
+convolutional features of the images they correspond to, which makes them visually discriminative. This property reflects in a better performance when the embeddings are employed inside convolutional networks.
+\section{State of the Art Models}
+\subsection{Method}
+TensorFlow is an open-source library developed by researchers from Google Brain and designed for high performance numerical and scientific computations. It is one of the most widely used libraries for machine learning research. TensorFlow offers both low level and high-level APIs which make development flexible and allow fast iteration. Moreover,
+TensorFlow makes use of the capabilities of modern GPUs for parallel computations to execute operations on tensors efficiently. Actually I try to use this framework these days.
+\subsection{GAN-CLS (Conditional Latent Space)}
+Reed \emph{et al.}~\cite{name7} were the first to propose a solution with promising results for the problem of text to image synthesis. The problem can be divided into two main subproblems: finding a visually discriminative representation for the text descriptions and using this representation to generate realistic images.
+  \begin{figure}[!htb]
+  	\centering
+  	\includegraphics[width=3in]{framework.png}\\
+  	\caption{Architecture of the customised GAN-CLS. Two fully connected layers compress the text embedding $\psi(t)$ and append it both in the generator and the discriminator. In the discriminator, the compressed embeddings are spatially replicated (duplicated) before being appended in depth.}\label{Figure2} 
+  \end{figure}
+\par The functions $G(z)$ and $D(x)$ encountered in regular GANs become in the context of conditional GANs, $G(z, \psi(t))$ and $D(x, \psi(t))$, where $\psi : \sum^∗\to\mathbb{R}^{N_\psi}$ is the char-CNN-RNN
+encoder, $\sum$ is the alphabet of the text descriptions, $t$ is a text description treated as a vector of characters and $N_\psi$ is the number of dimensions of the embedding. The text embedding $\psi(t)$ is used as the conditional vector $c$.
+\subsection{Model Architecture}
+GAN-CLS uses a deep convolutional architecture for both the generator and the discriminator, similar to DC-GAN (Deep Convolutional-GAN)~\cite{name10}.
+\par In the generator, a noise vector $z$ of dimension 128, is sampled from $N(0, I)$. The text $t$ is passed through the function $\psi$ and the output $\psi(t)$ is then compressed to dimension 128 using a fully connected layer with a leaky ReLU activation. The result is then concatenated with the noise vector $z$. The concatenated vector is transformed with a linear projection and then passed through a series of deconvolutions with leaky ReLU activations until a final tensor with dimension 64*64*3 is obtained. The values of the tensor are passed through a tanh activation to bring the pixel values in the range [-1, 1].
+\par In the discriminator, the input image is passed through a series of convolutional layers. When the spatial resolution becomes 4*4, the text embeddings are compressed to a vector with 128 dimensions using a fully connected layer with leaky ReLU activations as in the generator. These compressed embeddings are then spatially replicated and concatenated in depth to the convolutional features of the network. The concatenated tensor is then passed through more convolutions until a scalar is obtained. To this scalar, a sigmoid activation function is applied to bring the value of the scalar in the range [0, 1] which corresponds to a valid probability.
+\par The focus of the GAN-CLS paper is not on the details of the architecture of the discriminator and the generator. Thus, to obtain better results, the author deviated slightly from the DC-GAN architecture, and I added one residual layer~\cite{name11} in the discriminator and two residual layers in the generator. These modifications increase the capacity of the networks and lead to more visually pleasant images. Figure~\ref{Figure2} shows the architecture of the customised GAN-CLS.
+\bibliographystyle{ieee}
+\bibliography{yinyong10}
+\end{document}
