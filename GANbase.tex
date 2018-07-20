@@ -1,0 +1,63 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Generative Adversarial Nets}}
+\author{Liangjie Cao\\\\ July 20, 2018}
+\maketitle
+\abstract{A new framework for estimating generative models, in which simultaneously train two models: a generative model $G$ that captures the data distribution, and a discriminative model $D$ that estimates the probability that a sample came from the training data rather than $G$. The training procedure for $G$ is to maximize the probability of $D$ making a mistake. This framework corresponds to a minimax two-player game. In the space of arbitrary functions $G$ and $D$, a unique solution exists, with $G$ recovering the training data distribution and $D$ equal to $\frac{1}{2}$ everywhere. In the case where $G$ and $D$ are defined by multilayer perceptrons, the entire system can be trained with backpropagation. There is no need for any Markov chains or unrolled approximate inference networks during either training or generation of samples. Experiments demonstrate the potential of the framework through qualitative and quantitative evaluation of the generated samples.}
+\section{Introduction}
+The promise of deep learning is to discover rich, hierarchical models~\cite{name2}that represent probability distributions over the kinds of data encountered in artificial intelligence applications, such as natural
+images, audio waveforms containing speech, and symbols in natural language corpora. So far, the most striking successes in deep learning have involved discriminative models, usually those that map a high-dimensional, rich sensory input to a class label~\cite{name14,name22}. These striking successes have primarily been based on the backpropagation and dropout algorithms, using piecewise linear units~\cite{name19,name9,name10} which have a particularly well-behaved gradient . Deep generative models have had less of an impact, due to the difficulty of approximating many intractable probabilistic computations that arise in maximum likelihood estimation and related strategies, and due to difficulty of leveraging the benefits of piecewise linear units in the generative context. So the new model estimation procedure can sidesteps these difficulties. It's GAN.
+\par In the proposed adversarial nets framework, the generative model is pitted against an adversary: a discriminative model that learns to determine whether a sample is from the model distribution or the
+data distribution. The generative model can be thought of as analogous to a team of counterfeiters, trying to produce fake currency and use it without detection, while the discriminative model is analogous to the police, trying to detect the counterfeit currency. Competition in this game drives
+both teams to improve their methods until the counterfeits are indistiguishable from the genuine articles.
+\section{Adversarial Nets}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=3in]{diff.png}\\
+	\caption{Generative adversarial nets}\label{Figure1}
+\end{figure}
+The function V(G,D) is very familiar to us, $D$ is to maximize the probability of assigning the correct label to both training examples and samples from $G$. $G$ is to minimize $log(1 − D(G(z)))$:
+\begin{equation}
+\begin{split}
+\min_{G}\max_{D}=V(G,D)=\mathbb{E}_{x~p_{data}(x)}[logD(x)]+
+\\\mathbb{E}_{z~p_{z}(z)}[log(1-D(G(z)))]
+\end{split}
+\label{eq1}
+\end{equation}
+\par See Figure~\ref{Figure1} for a less formal, more pedagogical explanation of the approach. In practice, the authors implement the game using an iterative, numerical approach. Optimizing $D$ to completion in the inner loop of training is computationally prohibitive, and on finite datasets would result in overfitting. Instead, they alternate between $k$ steps of optimizing $D$ and one step of optimizing $G$. This results in $D$ being maintained near its optimal solution, so long as $G$ changes slowly enough.
+\par In practice, equation~\ref{eq1} may not provide sufficient gradient for $G$ to learn well. Early in learning, when $G$ is poor, $D$ can reject samples with high confidence because they are clearly different from
+the training data. In this case, $log(1 − D(G(z)))$ saturates. Rather than training $G$ to minimize $log(1 − D(G(z)))$ or train G to maximize log $D(G(z))$. This objective function results in the same fixed point of the dynamics of $G$ and $D$ but provides much stronger gradients early in learning.
+\section{Their Experiments}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=3in]{shuzi.png}\\
+	\caption{Digits obtained by linearly interpolating between coordinates in z space of the full model.}\label{Figure3}
+\end{figure}
+The authors trained adversarial nets an a range of datasets including MNIST, the Toronto Face Database (TFD), and CIFAR-10. The generator nets used a mixture of rectifier linear activations and sigmoid activations, while the discriminator net used maxout~\cite{name10} activations. Dropout~\cite{name17} was applied in training the discriminator net. While our theoretical framework permits the use of dropout and other noise at intermediate layers of the generator,Noise is as the input to only
+the bottommost layer of the generator network.
+\par Figure~\ref{Figure2} and~\ref{Figure3} show samples drawn from the generator net after training. These samples are better than samples generated by existing methods, they believe that these samples are at least competitive with the better generative models in the literature and highlight the
+potential of the adversarial framework.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=3in]{fig.png}\\
+	\caption{Visualization of samples from the model}\label{Figure2}
+\end{figure}
+\section{Advantages and Disadvantages}
+This new framework comes with advantages and disadvantages relative to previous modeling frameworks. The disadvantages are primarily that there is no explicit representation of $p_g(x)$, and that $D$ must be synchronized well with $G$ during training (in particular, $G$ must not be trained too much without updating $D$, in order to avoid ``the Helvetica scenario" in which $G$ collapses too many values of $z$ to the same value of x to have enough diversity to model p data ), much as the negative chains of a
+Boltzmann machine must be kept up to date between learning steps. The advantages are that Markov chains are never needed, only backprop is used to obtain gradients, no inference is needed during learning, and a wide variety of functions can be incorporated into the model.
+\section{Conclusion}
+This paper is the base of GAN. It has demonstrated the viability of the adversarial modeling framework, suggesting that these research directions could prove useful.
+\bibliographystyle{abbrv}
+\bibliography{yinyong12}
+\end{document}
