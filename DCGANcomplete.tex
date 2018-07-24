@@ -1,0 +1,61 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Semantic Image Inpainting with Deep Generative Models}}
+\author{Liangjie Cao\\\\ July 24, 2018}
+\maketitle
+\begin{abstract}
+Semantic image inpainting is a challenging task where large missing regions have to be filled based on the available visual data. Existing methods which extract informa ion from only a single image generally produce unsatisfactory results due to the lack of high level context. In this paper, we propose a novel method for semantic image inpainting, which generates the missing content by conditioning
+on the available data. Given a trained generative model,
+the authors search for the closest encoding of the corrupted image
+in the latent image manifold using our context and prior
+losses. This encoding is then passed through the generative
+model to infer the missing content. In this method, inference is possible irrespective of how the missing content is
+structured, while the state-of-the-art learning based method
+requires specific information about the holes in the training
+phase. Experiments on three datasets show that our method
+successfully predicts information in large missing regions
+and achieves pixel-level photorealism, significantly outperforming the state-of-the-art methods
+\end{abstract}
+\section{Introduction}
+Semantic inpainting~\cite{name30} refers to the task of inferring arbitrary large missing regions in images based on image semantics. Since prediction of high-level context is required, this task is significantly more difficult than classical inpainting or image completion which is often more concerned with correcting spurious data corruption or removing entire objects. Numerous applications such as restoration of damaged paintings or image editing~\cite{name3} benefit from accurate semantic inpainting methods if large regions are missing. However, inpainting becomes increasingly more difficult if large regions are missing or if scenes are complex.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=3in]{Ex.png}\\
+	\caption{Semantic inpainting results by TV, LR, PM and their method. Holes are marked by black color}\label{Figure1}
+\end{figure}
+\par Classical inpainting methods are often based on either
+local or non-local information to recover the image. Most
+existing methods are designed for single image inpainting. This assumption is hard to satisfy, if the missing region is large and possibly of arbitrary shape. Consequently, in this case, these methods are unable to recover the missing information. Fig.~\ref{Figure1} shows some challenging examples with large missing regions, where local methods fail to recover the nose and eyes.
+\section{Related Work}
+\subsection{GAN}
+(GANs) are a framework for training generative parametric models, and have been shown to produce high quality images~\cite{name4,name9,name32}. This framework trains two networks, a generator, $G$, and a discriminator $D$. $G$ maps a random vector $Z$, sampled from a prior distribution $p_Z$, to the image space while $D$ maps an input image to a likelihood. The purpose of $G$ is to generate realistic images, while $D$ plays an adversarial role, discriminating between the image generated from $G$, and the real image sampled from the data distribution $p_{data}$.
+\par The $G$ and $D$ networks are trained by optimizing the loss
+function is familiar to us:
+\begin{equation}
+\begin{split}
+\min_{G}\max_{D}=V(G,D)=E_{h-p_{data}(h)}[log(D(h))]+\\E_{Z-p_{Z}(h)}[log(1-(D(Z)))]
+\end{split}
+\end{equation}
+where $h$ is the sample from the $p_{data}$ distribution; $Z$ is a
+random encoding on the latent space.
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[width=3in]{Gan.png}\\
+	\caption{The proposed framework for inpainting. (a) Given a GAN model trained on real images, they iteratively update $z$ to find the closest mapping on the latent image manifold, based on the desinged loss functions. (b) Manifold traversing when iteratively updating $z$ using back-propagation. $z^{(0)}$ is random initialed; $z^{(k)}$ denotes the result in k-th iteration; and $\hat{z}$ denotes the final solution}\label{Figure2}
+\end{figure}
+\section{Semantic Inpainting by Constrained Image Generation}
+To fill large missing regions in images, this method for image inpainting utilizes the generator $G$ and the discriminator $D$, both of which are trained with uncorrupted data. After training, the generator $G$ is able to take a point $z$ drawn from $p_Z$ and generate an image mimicking samples from $p_{data}$. They hypothesize that if $G$ is efficient in its representation then an image that is not from $p_{data}$ (\emph{e.g.}, corrupted data) should not lie on the learned encoding manifold, $z$. Therefore, we aim to recover the encoding $\hat{z}$ ``closest" to the corrupted image while being constrained to the manifold, as illustrated in Fig.~\ref{Figure2}; they visualize the latent manifold, using t-SNE on the 2-dimensional space, and the intermediate results in the optimization steps of finding $\hat{z}$. After $\hat{z}$ is obtained, they can generate the missing content by using the trained generative model $G$.
+\bibliographystyle{abbrv}
+\bibliography{yinyong14}
+\end{document}
