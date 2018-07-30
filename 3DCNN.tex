@@ -1,0 +1,70 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{3D Convolutional Neural Networks for Human Action Recognition}}
+\author{Liangjie Cao\\\\ July 30, 2018}
+\maketitle
+\begin{abstract}
+The authors consider the fully automated recognition of actions in uncontrolled environment. Most existing work relies on domain knowledge to construct complex handcrafted features from inputs. In addition, the environments are usually assumed to be controlled. Convolutional neural networks (CNNs) are a type of deep models that can act directly on the raw inputs, thus automating the process of feature construction. However, such models are currently limited to handle 2D inputs. In this paper, we develop a novel 3D CNN model for
+action recognition. This model extracts features from both spatial and temporal dimensions by performing 3D convolutions, thereby
+capturing the motion information encoded in multiple adjacent frames. The developed model generates multiple channels of information from the input frames, and the final feature representation is obtained by combining information from all channels. They apply the developed model to recognize human actions in real-world environment, and
+it achieves superior performance without relying on handcrafted features.
+\end{abstract}
+\section{Introduction}
+Recognizing human actions in real-world environment finds applications in a variety of domains including intelligent video surveillance, customer attributes, and shopping behavior analysis. However, accurate recognition of actions is a highly challenging task due to cluttered backgrounds, occlusions, and viewpoint variations, etc. Therefore, most of the existing approaches (Efros \emph{et al.}~\cite{name1}; Schüldt \emph{et al.}~\cite{name2}; Dollár \emph{et al.}~\cite{name3})
+make certain assumptions (\emph{e.g.}, small scale and viewpoint changes) about the circumstances under which the video was taken. However, such assumptions seldom hold in real-world environment. In addition, most of these approaches follow the conventional paradigm of pattern recognition, which consists of two steps in which the first step computes complex handcrafted features from raw video frames and the second step learns classifiers based on the obtained features. In real-world scenarios, it is rarely known which features are impor-
+tant for the task at hand, since the choice of feature is
+highly problem-dependent. Especially for human action recognition, different action classes may appear dramatically different in terms of their appearances and motion patterns.
+  \begin{figure}[!htb]
+  	\centering
+  	\includegraphics[width=3in]{21.png}\\
+  	\caption{Comparison of 2D (a) and 3D (b) convolutions.
+  		In (b) the size of the convolution kernel in the temporal
+  		dimension is 3, and the sets of connections are color-coded
+  		so that the shared weights are in the same color. In 3D
+  		convolution, the same 3D kernel is applied to overlapping
+  		3D cubes in the input video to extract motion features.}\label{Figure1} 
+  \end{figure}
+\par As a class of attractive deep models for automated feature construction, CNNs have been primarily applied on 2D images.(Figure~\ref{Figure1}) In this paper, they consider the use of CNNs for human action recognition in videos. A sim ple approach in this direction is to treat video frames
+as still images and apply CNNs to recognize actions at the individual frame level. Indeed, this approach has been used to analyze the videos of developing embryos. However, such approach does not consider the motion information encoded in multiple contiguous frames. To effectively incorporate the motion information in video analysis, we propose to perform 3D convolution in the convolutional layers
+of CNNs so that discriminative features along both
+spatial and temporal dimensions are captured. 
+They show that by applying multiple distinct convolutional
+operations at the same location on the input, multiple types of features can be extracted. Based on the proposed 3D convolution, a variety of 3D CNN architectures can be devised to analyze video data. They develop a 3D CNN architecture that generates multiple channels of information from adjacent video frames and performs convolution and subsampling separately in each channel. The final feature representation is obtained by combining information from all channels.
+An additional advantage of the CNN-based models is that the recognition phase is very efficient due to their feed-forward nature.
+\section{3D Convolutional Neural Networks}
+In 2D CNNs, 2D convolution is performed at the convolutional layers to extract features from local neighborhood on feature maps in the previous layer. Then an additive bias is applied and the result is passed through a sigmoid function. Formally, the value of
+unit at position $(x, y)$ in the $j^{th}$ feature map in the $i^{th}$ layer, denoted as $v_{ij}^{xy}$ , is given by:
+\begin{equation}
+v_{ij}^{xy}=tanh(b_{ij}+\sum_m\sum_{p=0}^{P_i-1}\sum_{q=0}^{Q_i-1}w_{ijm}^{pq}v^{(x+p)(y+q)}_{(i-1)m})
+\end{equation}
+where tanh($\cdot$) is the hyperbolic tangent function, $b_{ij}$ is the bias for this feature map, $m$ indexes over the
+set of feature maps in the (i − 1)th layer connected to the current feature map, $w_{ijk}^{pq}$ is the value at the
+position $(p, q)$ of the kernel connected to the kth feature map, and $P_i$ and $Q_i$ are the height and width of the kernel, respectively. In the subsampling layers, the resolution of the feature maps is reduced by pooling over local neighborhood on the feature maps in the previous layer, thereby increasing invariance to distortions on the inputs. A CNN architecture can be constructed by stacking multiple layers of convolution and subsampling in an alternating fashion. The parameters of CNN, such as the bias $b_{ij}$ and the kernel weight $w_ {ijk}^{pq}$, are usually trained using either supervised or unsupervised approaches.
+  \begin{figure}[!htb]
+  	\centering
+  	\includegraphics[width=3in]{22.png}\\
+  	\caption{Extraction of multiple features from contiguous
+  		frames. Multiple 3D convolutions can be applied to con-
+  		tiguous frames to extract multiple features. As in Figure 1,
+  		the sets of connections are color-coded so that the shared
+  		weights are in the same color. Note that all the 6 sets of
+  		connections do not share weights, resulting in two different
+  		feature maps on the right.}\label{Figure2} 
+  \end{figure}
+\par Note that a 3D convolutional kernel can only extract one type of features from the frame cube, since the kernel weights are replicated across the entire cube. A general design principle of CNNs is that the number of feature maps should be increased in late layers by
+generating multiple types of features from the same set of lower-level feature maps. Similar to the case of 2D convolution, this can be achieved by applying multiple 3D convolutions with distinct kernels to the same location in the previous layer (Figure~\ref{Figure2}).
+
+\bibliographystyle{abbrv}
+\bibliography{yinyong17}
+\end{document}
