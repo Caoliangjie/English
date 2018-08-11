@@ -1,0 +1,33 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage{cvpr}
+\usepackage{times}
+\usepackage{epsfig}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[breaklinks=true,bookmarks=false,backref=page]{hyperref}
+\cvprfinalcopy
+\def\cvprPaperID{****}
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+\begin{document}
+\title{\textbf{Learning Spatiotemporal Features with 3D Convolutional Networks}}
+\author{Liangjie Cao\\\\ Aug., 2018}
+\maketitle
+\begin{abstract}
+They propose a simple, yet effective approach for spatiotemporal feature learning using deep 3-dimensional convolutional networks (3D ConvNets) trained on a large scale supervised video dataset. Our findings are three-fold: 1) 3D ConvNets are more suitable for spatiotemporal feature
+learning compared to 2D ConvNets; 2) A homogeneous architecture with small 3 x 3 x 3 convolution kernels in all layers is among the best performing architectures for 3D ConvNets; and 3) Our learned features, namely C3D (Con-
+volutional 3D), with a simple linear classifier outperform state-of-the-art methods on 4 different benchmarks and are comparable with current best methods on the other 2 benchmarks. In addition, the features are compact: achieving 52.8\% accuracy on UCF101 dataset with only 10 dimensions and also very efficient to compute due to the fast inference of ConvNets. Finally, they are conceptually very simple and easy to train and use.
+\end{abstract}
+\section{Introduction}
+Multimedia on the Internet is growing rapidly resulting in an increasing number of videos being shared every minute. To combat the information explosion it is essential to understand and analyze these videos for various purposes like search, recommendation, ranking \emph{etc.} The computer vision community has been working on video analysis for decades and tackled different problems such as action recognition~\cite{name28}, abnormal event detection~\cite{name20}, and activity understanding~\cite{name8}. Considerable progress has been made in these individual problems by employing different specific solutions. However, there is still a growing need for a generic video descriptor that helps in solving large-scale video tasks in a homogeneous way.
+\section{Learning Features with 3D ConvNets}
+They believe that 3D ConvNet is well-suited for spatiotemporal feature learning. Compared to 2D ConvNet, 3D ConvNet has the ability to model temporal information better owing to 3D convolution and 3D pooling operations. In 3D ConvNets, convolution and pooling operations are performed spatio-temporally while in 2D ConvNets they are done only spatially. Figure~\ref{Figure1} illustrates the difference, 2D convolution applied on an image will output an image, 2D convolution applied on multiple images (treating them as different channels)~\cite{name32} also results in an image. Hence, 2D ConvNets lose temporal information of the input signal right after every convolution operation. Only 3D convolution preserves the temporal information of the input signals resulting in an output volume.
+  \begin{figure}[!htb]
+  	\centering
+  	\includegraphics[width=3in]{f1.png}\\
+  	\caption{2D and 3D convolution operations.}\label{Figure1} 
+  \end{figure}
+\bibliographystyle{abbrv}
+\bibliography{yinyong20}
+\end{document}
